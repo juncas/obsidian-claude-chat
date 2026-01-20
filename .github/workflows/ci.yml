@@ -30,6 +30,40 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Validate manifest.json
+        run: |
+          # Validate manifest.json has all required fields
+          node -e "
+            const manifest = require('./manifest.json');
+            const required = ['id', 'name', 'version', 'minAppVersion', 'description', 'author'];
+            const missing = required.filter(f => !manifest[f]);
+            if (missing.length > 0) {
+              console.error('Missing required fields in manifest.json:', missing.join(', '));
+              process.exit(1);
+            }
+            // Validate version format (x.y.z without 'v' prefix)
+            if (!/^\d+\.\d+\.\d+$/.test(manifest.version)) {
+              console.error('Invalid version format in manifest.json. Expected x.y.z, got:', manifest.version);
+              process.exit(1);
+            }
+            console.log('✅ manifest.json is valid');
+            console.log('  - id:', manifest.id);
+            console.log('  - name:', manifest.name);
+            console.log('  - version:', manifest.version);
+          "
+
+      - name: Validate version consistency
+        run: |
+          MANIFEST_VERSION=$(node -p "require('./manifest.json').version")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          
+          if [ "$MANIFEST_VERSION" != "$PACKAGE_VERSION" ]; then
+            echo "Error: manifest.json version ($MANIFEST_VERSION) differs from package.json version ($PACKAGE_VERSION)"
+            echo "These must match for release consistency"
+            exit 1
+          fi
+          echo "✅ Version consistency check passed: $MANIFEST_VERSION"
+
       - name: Run ESLint
         run: npm run lint
 
@@ -38,6 +72,24 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Verify build artifacts
+        run: |
+          # Check that all required files exist after build
+          if [ ! -f "main.js" ]; then
+            echo "Error: main.js not found after build"
+            exit 1
+          fi
+          if [ ! -f "manifest.json" ]; then
+            echo "Error: manifest.json not found"
+            exit 1
+          fi
+          if [ ! -f "styles.css" ]; then
+            echo "Error: styles.css not found"
+            exit 1
+          fi
+          echo "✅ All required build artifacts exist"
+          ls -la main.js manifest.json styles.css
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
