@@ -10,6 +10,9 @@ node_modules/
 .obsidian/
 .obsidian-plugins/
 
+# Claude
+.claude/
+
 # Environment
 .env
 .env.local
