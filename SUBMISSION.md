@@ -2,6 +2,49 @@
 
 This document provides the necessary information and steps to submit this plugin to the Obsidian community plugins repository.
 
+## Official Checklist Verification
+
+The following table shows the verification status of each item in the official PR checklist:
+
+| Checklist Item | Status | Notes |
+|----------------|--------|-------|
+| Quality attestation | ✅ Ready | Code follows best practices, properly linted and typed |
+| **Platform Testing** | | |
+| - Windows | ⏳ Pending | Desktop only plugin - needs manual testing |
+| - macOS | ⏳ Pending | Desktop only plugin - needs manual testing |
+| - Linux | ⏳ Pending | Desktop only plugin - needs manual testing |
+| - Android | N/A | `isDesktopOnly: true` - not applicable |
+| - iOS | N/A | `isDesktopOnly: true` - not applicable |
+| **Release Files** | | |
+| - main.js | ✅ Automated | CI builds and verifies existence |
+| - manifest.json | ✅ Verified | All required fields present |
+| - styles.css | ✅ Present | Custom styles included |
+| Release name format | ✅ Automated | CI ensures no `v` prefix (e.g., `1.0.0`) |
+| ID consistency | ✅ Verified | `claude-chat-obsidian` matches in manifest.json and community-plugins.json entry |
+| README documentation | ✅ Complete | Purpose, installation, usage, and troubleshooting documented |
+| Developer policies | ✅ Reviewed | Plugin adheres to Obsidian developer policies |
+| Plugin guidelines | ✅ Reviewed | Self-reviewed against common pitfalls |
+| LICENSE file | ✅ Present | MIT License |
+| Code attribution | ✅ N/A | No third-party plugin code used |
+
+## CI/CD Automation
+
+The following automated checks are performed:
+
+### CI Workflow (`.github/workflows/ci.yml`)
+- ✅ **manifest.json validation** - Verifies all required fields and version format
+- ✅ **Version consistency** - Checks manifest.json and package.json versions match
+- ✅ **ESLint** - Code style and quality checks
+- ✅ **TypeScript type checking** - Static type validation
+- ✅ **Build verification** - Confirms all artifacts are generated
+- ✅ **Artifact upload** - Stores build outputs for verification
+
+### Release Workflow (`.github/workflows/release.yml`)
+- ✅ **Version tag validation** - Only accepts `x.y.z` format (no `v` prefix)
+- ✅ **Version consistency check** - Validates tag matches manifest.json and package.json
+- ✅ **Automated release creation** - Creates GitHub release with correct name
+- ✅ **Release artifacts** - Attaches main.js, manifest.json, and styles.css
+
 ## Pre-submission Checklist
 
 Before submitting your plugin, ensure the following requirements are met:
@@ -14,6 +57,7 @@ Before submitting your plugin, ensure the following requirements are met:
 - [x] Contains `styles.css` for custom styles
 - [x] GitHub Issues are enabled
 - [x] Release workflow is configured (`.github/workflows/release.yml`)
+- [x] CI workflow validates all requirements (`.github/workflows/ci.yml`)
 
 ## Step 1: Create a GitHub Release
 
