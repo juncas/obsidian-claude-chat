@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+
+# Build output (development only - release builds should include main.js)
+# Uncomment the following line if you don't want to track main.js
+# main.js
+*.js.map
+
+# Obsidian
+.obsidian/
+.obsidian-plugins/
+
+# Environment
+.env
+.env.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# TypeScript
+*.tsbuildinfo
+
+# Temporary files
+*.tmp
+.temp/

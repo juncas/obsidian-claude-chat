@@ -1,0 +1,1495 @@
+/* ===================================================================
+   Claude Chat - Neural Obsidian Design System
+   ===================================================================
+
+   Design Philosophy: Merge Obsidian's mineral aesthetic with
+   AI's neural network intelligence. Deep, thoughtful, reactive.
+
+   Color Strategy: Theme-adaptive with neural purple accents
+   Typography: Crisp, technical yet readable
+   Motion: Subtle, purposeful, delightful
+   =================================================================== */
+
+/* ===================================================================
+   CSS CUSTOM PROPERTIES - Theme Bridge
+   =================================================================== */
+
+:root {
+    /* Neural accent colors - work with any Obsidian theme */
+    --claude-neural-base: #8b5cf6;
+    --claude-neural-glow: #a78bfa;
+    --claude-neural-dim: #6d28d9;
+    --claude-neural-subtle: rgba(139, 92, 246, 0.15);
+    --claude-neural-border: rgba(139, 92, 246, 0.25);
+    --claude-neural-glow-soft: rgba(139, 92, 246, 0.08);
+
+    /* Message surfaces */
+    --claude-user-surface: var(--interactive-accent, #7b6cd9);
+    --claude-user-text: var(--text-on-accent, #ffffff);
+    --claude-assistant-surface: var(--background-modifier-form-field, var(--background-secondary, #1e1e1e));
+    --claude-assistant-text: var(--text-normal, #e4e4e7);
+    --claude-system-surface: transparent;
+    --claude-system-text: var(--text-muted, #71717a);
+
+    /* Timing */
+    --claude-transition-fast: 0.15s;
+    --claude-transition-normal: 0.25s;
+    --claude-transition-slow: 0.4s;
+    --claude-easing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===================================================================
+   MAIN CONTAINER
+   =================================================================== */
+
+.claude-chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--background-primary);
+    position: relative;
+}
+
+/* Neural mesh background effect */
+.claude-chat-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(ellipse at 20% 20%, var(--claude-neural-glow-soft) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, var(--claude-neural-glow-soft) 0%, transparent 50%);
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ===================================================================
+   MESSAGES AREA
+   =================================================================== */
+
+.claude-chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    z-index: 1;
+    scroll-behavior: smooth;
+}
+
+/* ===================================================================
+   MESSAGE BUBBLES - Core Design
+   =================================================================== */
+
+.claude-chat-message {
+    display: flex;
+    flex-direction: column;
+    max-width: 85%;
+    animation: claude-message-reveal var(--claude-transition-normal) var(--claude-easing) backwards;
+    position: relative;
+}
+
+.claude-chat-message:nth-child(1) { animation-delay: 0s; }
+.claude-chat-message:nth-child(2) { animation-delay: 0.05s; }
+.claude-chat-message:nth-child(3) { animation-delay: 0.1s; }
+.claude-chat-message:nth-child(n+4) { animation-delay: 0.15s; }
+
+/* Message reveal animation */
+@keyframes claude-message-reveal {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   MESSAGE COPY BUTTON - Appears on hover
+   ────────────────────────────────────────────────────────────────── */
+
+.claude-message-copy-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    padding: 4px;
+    background: var(--background-secondary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 6px;
+    color: var(--text-muted);
+    cursor: pointer;
+    opacity: 0;
+    transition: all var(--claude-transition-fast) ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.claude-message-copy-button svg {
+    width: 14px;
+    height: 14px;
+}
+
+.claude-chat-message:hover .claude-message-copy-button {
+    opacity: 1;
+}
+
+.claude-message-copy-button:hover {
+    background: var(--claude-neural-subtle);
+    border-color: var(--claude-neural-border);
+    color: var(--claude-neural-glow);
+}
+
+.claude-message-copy-button.copied {
+    background: rgba(34, 197, 94, 0.2);
+    border-color: rgba(34, 197, 94, 0.4);
+    color: #22c55e;
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   USER MESSAGE - Sharp, direct, confident
+   ────────────────────────────────────────────────────────────────── */
+
+.claude-chat-message-user {
+    align-self: flex-end;
+    align-items: flex-end;
+}
+
+.claude-chat-message-user .claude-chat-message-content {
+    background: linear-gradient(135deg,
+        var(--claude-user-surface) 0%,
+        color-mix(in srgb, var(--claude-user-surface) 85%, black) 100%
+    );
+    color: var(--claude-user-text);
+    padding: 11px 16px;
+    border-radius: 16px 16px 4px 16px;
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.15),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle shine effect on user messages */
+.claude-chat-message-user .claude-chat-message-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(180deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        transparent 100%
+    );
+    pointer-events: none;
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   ASSISTANT MESSAGE - Thoughtful, detailed, organic
+   ────────────────────────────────────────────────────────────────── */
+
+.claude-chat-message-assistant {
+    align-self: flex-start;
+    align-items: flex-start;
+}
+
+.claude-chat-message-assistant .claude-chat-message-content {
+    background: var(--claude-assistant-surface);
+    color: var(--claude-assistant-text);
+    padding: 14px 18px;
+    border-radius: 16px 4px 16px 16px;
+    border: 1px solid var(--background-modifier-border);
+    border-left: 3px solid var(--claude-neural-base);
+    box-shadow:
+        0 2px 12px rgba(0, 0, 0, 0.08),
+        0 0 0 1px var(--background-modifier-border) inset;
+    position: relative;
+}
+
+/* Neural accent line glow */
+.claude-chat-message-assistant .claude-chat-message-content::after {
+    content: '';
+    position: absolute;
+    left: -3px;
+    top: 12px;
+    bottom: 12px;
+    width: 3px;
+    background: linear-gradient(180deg,
+        transparent 0%,
+        var(--claude-neural-glow) 50%,
+        transparent 100%
+    );
+    opacity: 0.6;
+    border-radius: 0 2px 2px 0;
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   SYSTEM MESSAGE - Subtle, informative
+   ────────────────────────────────────────────────────────────────── */
+
+.claude-chat-message-system {
+    align-self: center;
+    align-items: center;
+    max-width: 90%;
+}
+
+.claude-chat-message-system .claude-chat-message-content {
+    background: var(--claude-neural-subtle);
+    color: var(--text-normal);
+    padding: 16px 20px;
+    border-radius: 12px;
+    font-size: var(--font-ui-small);
+    text-align: left;
+    border: 1px solid var(--claude-neural-border);
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+/* System message list styling */
+.claude-chat-message-system ul {
+    margin: 12px 0;
+    padding-left: 20px;
+}
+
+.claude-chat-message-system li {
+    margin: 6px 0;
+    color: var(--text-muted);
+}
+
+.claude-chat-message-system strong {
+    color: var(--claude-neural-glow);
+    font-weight: 600;
+}
+
+.claude-chat-message-system code {
+    background: var(--background-primary);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: var(--font-monospace);
+    font-size: 0.9em;
+    color: var(--claude-neural-base);
+    border: 1px solid var(--claude-neural-border);
+}
+
+/* ===================================================================
+   MESSAGE CONTENT & TEXT
+   =================================================================== */
+
+.claude-chat-message-content {
+    word-wrap: break-word;
+    transition: box-shadow var(--claude-transition-fast) ease;
+    position: relative;
+}
+
+.claude-chat-message-content:hover {
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.12),
+        0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+}
+
+.claude-chat-message-text {
+    font-size: var(--font-ui-smaller);
+    line-height: 1.6;
+    user-select: text;
+    -webkit-user-select: text;
+}
+
+/* Markdown typography within messages */
+.claude-chat-message-text p {
+    margin: 0 0 0.75em 0;
+}
+
+.claude-chat-message-text p:last-child {
+    margin-bottom: 0;
+}
+
+/* Headings */
+.claude-chat-message-text h1,
+.claude-chat-message-text h2,
+.claude-chat-message-text h3 {
+    margin-top: 0.75em;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+    color: var(--claude-neural-glow);
+}
+
+.claude-chat-message-text h1:first-child,
+.claude-chat-message-text h2:first-child,
+.claude-chat-message-text h3:first-child {
+    margin-top: 0;
+}
+
+/* Links - Obsidian-style */
+.claude-chat-message-text a {
+    color: var(--claude-neural-glow);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: all var(--claude-transition-fast) ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.claude-chat-message-text a:hover {
+    border-bottom-color: var(--claude-neural-base);
+    color: var(--claude-neural-base);
+}
+
+/* Internal/wiki links */
+.claude-chat-message-text .internal-link {
+    color: var(--claude-neural-glow);
+    position: relative;
+    cursor: pointer;
+    border-bottom: 1px solid transparent;
+    transition: all var(--claude-transition-fast) ease;
+}
+
+.claude-chat-message-text .internal-link:hover {
+    border-bottom-color: var(--claude-neural-base);
+    color: var(--claude-neural-base);
+}
+
+.claude-chat-message-text .internal-link.unresolved {
+    color: #f87171;
+    border-bottom: 1px dashed #f87171;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.claude-chat-message-text .internal-link.unresolved:hover {
+    opacity: 1;
+}
+
+/* Code blocks - Obsidian-inspired */
+.claude-chat-message-text pre {
+    background: var(--background-primary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 8px;
+    padding: 12px;
+    overflow-x: auto;
+    margin: 0.75em 0;
+    font-family: var(--font-monospace);
+    font-size: 0.9em;
+    line-height: 1.5;
+    position: relative;
+}
+
+/* Code block copy button */
+.claude-code-copy-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: var(--background-secondary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 6px;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    opacity: 0;
+    transition: all var(--claude-transition-fast) ease;
+}
+
+.claude-code-copy-button svg {
+    width: 14px;
+    height: 14px;
+}
+
+.claude-chat-message-text pre:hover .claude-code-copy-button {
+    opacity: 1;
+}
+
+.claude-code-copy-button:hover {
+    background: var(--claude-neural-subtle);
+    border-color: var(--claude-neural-border);
+    color: var(--claude-neural-glow);
+}
+
+.claude-code-copy-button.copied {
+    background: rgba(34, 197, 94, 0.2);
+    border-color: rgba(34, 197, 94, 0.4);
+    color: #22c55e;
+}
+
+/* Inline code */
+.claude-chat-message-text code {
+    background: var(--background-modifier-border);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: var(--font-monospace);
+    font-size: 0.9em;
+    color: var(--claude-neural-glow);
+}
+
+/* Lists */
+.claude-chat-message-text ul,
+.claude-chat-message-text ol {
+    margin: 0.5em 0;
+    padding-left: 1.5em;
+}
+
+/* Blockquotes */
+.claude-chat-message-text blockquote {
+    border-left: 3px solid var(--claude-neural-base);
+    padding-left: 1em;
+    margin: 0.75em 0;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* ===================================================================
+   TYPING CURSOR - Streaming indicator
+   =================================================================== */
+
+.claude-chat-message-text .claude-typing-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.1em;
+    background: var(--claude-neural-base);
+    margin-left: 2px;
+    vertical-align: text-bottom;
+    animation: claude-cursor-blink 1s step-end infinite;
+}
+
+@keyframes claude-cursor-blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* ===================================================================
+   THINKING INDICATOR - Neural pulse animation
+   =================================================================== */
+
+.claude-chat-message-thinking {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+}
+
+.claude-thinking-dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.claude-thinking-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--claude-neural-base);
+    border-radius: 50%;
+    animation: claude-neural-pulse 1.4s ease-in-out infinite;
+}
+
+.claude-thinking-dot:nth-child(1) { animation-delay: 0s; }
+.claude-thinking-dot:nth-child(2) { animation-delay: 0.2s; }
+.claude-thinking-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes claude-neural-pulse {
+    0%, 100% {
+        transform: scale(0.8);
+        opacity: 0.3;
+        box-shadow: 0 0 0 transparent;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+        box-shadow: 0 0 12px var(--claude-neural-glow);
+    }
+}
+
+.claude-thinking-text {
+    font-size: var(--font-ui-smaller);
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* ===================================================================
+   TIMESTAMP
+   =================================================================== */
+
+.claude-chat-message-timestamp {
+    font-size: var(--font-ui-smallest);
+    color: var(--text-faint);
+    margin-top: 6px;
+    padding: 0 6px;
+    opacity: 0.7;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+}
+
+/* ===================================================================
+   INPUT AREA
+   =================================================================== */
+
+.claude-chat-input-container {
+    display: flex;
+    flex-direction: column;
+    padding: 16px 20px 20px;
+    background: var(--background-secondary);
+    border-top: 1px solid var(--background-modifier-border);
+    position: relative;
+    z-index: 2;
+}
+
+/* Subtle glow at top of input area */
+.claude-chat-input-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 20px;
+    right: 20px;
+    height: 1px;
+    background: linear-gradient(90deg,
+        transparent,
+        var(--claude-neural-base),
+        transparent
+    );
+    opacity: 0.3;
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   INPUT FIELD - Focus on content
+   ────────────────────────────────────────────────────────────────── */
+
+.claude-chat-input-wrapper {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.claude-chat-input {
+    flex: 1;
+    min-height: 44px;
+    max-height: 140px;
+    padding: 12px 16px;
+    border: 1.5px solid var(--background-modifier-border);
+    border-radius: 12px;
+    background: var(--background-primary);
+    color: var(--text-normal);
+    font-family: var(--font-interface);
+    font-size: var(--font-ui-smaller);
+    line-height: 1.5;
+    resize: none;
+    transition: all var(--claude-transition-fast) ease;
+}
+
+.claude-chat-input:focus {
+    outline: none;
+    border-color: var(--claude-neural-base);
+    box-shadow:
+        0 0 0 3px var(--claude-neural-subtle),
+        0 4px 12px rgba(139, 92, 246, 0.1);
+    transform: translateY(-1px);
+}
+
+.claude-chat-input:focus::placeholder {
+    color: transparent;
+}
+
+.claude-chat-input::placeholder {
+    color: var(--text-muted);
+    transition: color var(--claude-transition-fast) ease;
+}
+
+.claude-chat-input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: var(--background-modifier-form-field);
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   SEND BUTTON - Call to action
+   ────────────────────────────────────────────────────────────────── */
+
+.claude-chat-send-button {
+    min-width: 48px;
+    height: 44px;
+    padding: 0 16px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg,
+        var(--claude-neural-base) 0%,
+        var(--claude-neural-dim) 100%
+    );
+    color: white;
+    font-weight: 600;
+    font-size: var(--font-ui-smaller);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all var(--claude-transition-fast) ease;
+    box-shadow:
+        0 2px 8px rgba(139, 92, 246, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+.claude-chat-send-button:hover:not(:disabled) {
+    background: linear-gradient(135deg,
+        var(--claude-neural-glow) 0%,
+        var(--claude-neural-base) 100%
+    );
+    transform: translateY(-2px);
+    box-shadow:
+        0 6px 20px rgba(139, 92, 246, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+}
+
+.claude-chat-send-button:active:not(:disabled) {
+    transform: translateY(0) scale(0.97);
+}
+
+.claude-chat-send-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    filter: grayscale(0.5);
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   STOP BUTTON - Emergency stop
+   ────────────────────────────────────────────────────────────────── */
+
+.claude-chat-stop-button {
+    min-width: 48px;
+    height: 44px;
+    padding: 0 16px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg,
+        #dc2626 0%,
+        #b91c1c 100%
+    );
+    color: white;
+    font-weight: 600;
+    font-size: var(--font-ui-smaller);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all var(--claude-transition-fast) ease;
+    box-shadow:
+        0 2px 8px rgba(220, 38, 38, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+.claude-chat-stop-button:hover {
+    background: linear-gradient(135deg,
+        #ef4444 0%,
+        #dc2626 100%
+    );
+    transform: translateY(-2px);
+    box-shadow:
+        0 6px 20px rgba(220, 38, 38, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+}
+
+.claude-chat-stop-button:active {
+    transform: translateY(0) scale(0.97);
+}
+
+/* Send icon */
+.claude-chat-send-button svg {
+    width: 18px;
+    height: 18px;
+    transition: transform var(--claude-transition-fast) ease;
+}
+
+.claude-chat-send-button:hover:not(:disabled) svg {
+    transform: translateX(2px);
+}
+
+/* Stop icon */
+.claude-chat-stop-button svg {
+    width: 18px;
+    height: 18px;
+    transition: transform var(--claude-transition-fast) ease;
+}
+
+.claude-chat-stop-button:hover svg {
+    transform: scale(1.1);
+}
+
+/* ===================================================================
+   SCROLLBAR - Elegant, unobtrusive
+   =================================================================== */
+
+.claude-chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.claude-chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.claude-chat-messages::-webkit-scrollbar-thumb {
+    background: var(--background-modifier-border);
+    border-radius: 3px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+.claude-chat-messages::-webkit-scrollbar-thumb:hover {
+    background: var(--text-faint);
+    background-clip: content-box;
+}
+
+/* ===================================================================
+   SCROLL TO BOTTOM BUTTON - Appears when user scrolls up
+   =================================================================== */
+
+.claude-scroll-bottom-button {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: var(--claude-neural-base);
+    border: none;
+    border-radius: 20px;
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(139, 92, 246, 0.4);
+    z-index: 100;
+    animation: claude-scroll-button-appear 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes claude-scroll-button-appear {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.claude-scroll-bottom-button svg {
+    width: 16px;
+    height: 16px;
+}
+
+.claude-scroll-bottom-button:hover {
+    background: var(--claude-neural-glow);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5);
+    transform: translateX(-50%) translateY(-2px);
+}
+
+.claude-scroll-bottom-button:active {
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ===================================================================
+   EMPTY STATE - Welcoming, guiding
+   =================================================================== */
+
+.claude-chat-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 40px 20px;
+    text-align: center;
+    opacity: 0;
+    animation: claude-fade-in 0.6s ease forwards;
+}
+
+@keyframes claude-fade-in {
+    to { opacity: 1; }
+}
+
+.claude-empty-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 20px;
+    opacity: 0.8;
+    color: var(--claude-neural-base);
+}
+
+.claude-empty-title {
+    font-size: var(--font-ui-larger);
+    font-weight: 600;
+    color: var(--text-normal);
+    margin-bottom: 8px;
+}
+
+.claude-empty-subtitle {
+    font-size: var(--font-ui-smaller);
+    color: var(--text-muted);
+    max-width: 300px;
+}
+
+/* ===================================================================
+   RESPONSIVE DESIGN
+   =================================================================== */
+
+/* Compact sidebar */
+@media (max-width: 500px) {
+    .claude-chat-message {
+        max-width: 95%;
+    }
+
+    .claude-chat-messages {
+        padding: 16px 12px;
+    }
+
+    .claude-chat-input-container {
+        padding: 12px 16px 16px;
+    }
+
+    .claude-chat-input {
+        min-height: 40px;
+        padding: 10px 14px;
+    }
+
+    .claude-chat-send-button {
+        min-width: 44px;
+        height: 40px;
+    }
+}
+
+/* Mobile devices */
+@media (max-width: 400px) {
+    .claude-chat-message {
+        max-width: 98%;
+    }
+
+    .claude-chat-message-user .claude-chat-message-content,
+    .claude-chat-message-assistant .claude-chat-message-content {
+        padding: 10px 14px;
+        border-radius: 12px;
+    }
+}
+
+/* ===================================================================
+   ACCESSIBILITY - Reduced motion
+   =================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .claude-chat-message,
+    .claude-chat-input,
+    .claude-chat-send-button,
+    .claude-typing-cursor,
+    .claude-thinking-dot {
+        animation: none !important;
+        transition: none !important;
+    }
+
+    .claude-chat-input:focus {
+        transform: none;
+    }
+}
+
+/* Focus visible for keyboard navigation */
+.claude-chat-send-button:focus-visible {
+    outline: 2px solid var(--claude-neural-base);
+    outline-offset: 2px;
+}
+
+.claude-chat-input:focus-visible {
+    outline: none;
+    border-color: var(--claude-neural-base);
+}
+
+/* ===================================================================
+   THEME COMPATIBILITY - Light mode adjustments
+   =================================================================== */
+
+body.theme-light .claude-chat-message-assistant .claude-chat-message-content {
+    background: var(--background-secondary, #f5f5f5);
+    border-color: var(--background-modifier-border, #e0e0e0);
+}
+
+body.theme-light .claude-chat-input {
+    background: var(--background-primary, #ffffff);
+}
+
+/* ===================================================================
+   UTILITY CLASSES
+   =================================================================== */
+
+.claude-hidden {
+    display: none !important;
+}
+
+.claude-fade-in {
+    animation: claude-fade-in 0.3s ease;
+}
+
+.claude-slide-up {
+    animation: claude-message-reveal 0.3s ease;
+}
+
+/* ===================================================================
+   HEADER TOOLBAR - Quick action buttons
+   =================================================================== */
+
+.claude-chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--background-secondary);
+    border-bottom: 1px solid var(--background-modifier-border);
+    flex-shrink: 0;
+}
+
+.claude-chat-header-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: var(--font-ui-medium);
+    color: var(--text-normal);
+}
+
+.claude-chat-header-title svg {
+    width: 20px;
+    height: 20px;
+    color: var(--claude-neural-base);
+}
+
+.claude-chat-header-title span {
+    color: var(--text-normal);
+}
+
+.claude-chat-header-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.claude-header-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--background-primary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-size: var(--font-ui-smaller);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--claude-transition-fast) ease;
+}
+
+.claude-header-button:hover {
+    background: var(--claude-neural-subtle);
+    border-color: var(--claude-neural-border);
+    color: var(--claude-neural-glow);
+}
+
+.claude-header-button:active {
+    transform: scale(0.97);
+}
+
+.claude-header-button:disabled,
+.claude-header-button.claude-header-button-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.claude-header-button svg {
+    width: 16px;
+    height: 16px;
+}
+
+.claude-header-button span {
+    display: none;
+}
+
+@media (min-width: 600px) {
+    .claude-header-button span {
+        display: inline;
+    }
+}
+
+/* ===================================================================
+   MESSAGE EDIT BUTTON - Appears on hover for user messages
+   =================================================================== */
+
+.claude-message-edit-button {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 28px;
+    height: 28px;
+    padding: 4px;
+    background: var(--background-secondary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 6px;
+    color: var(--text-muted);
+    cursor: pointer;
+    opacity: 0;
+    transition: all var(--claude-transition-fast) ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.claude-message-edit-button svg {
+    width: 14px;
+    height: 14px;
+}
+
+.claude-chat-message:hover .claude-message-edit-button {
+    opacity: 1;
+}
+
+.claude-message-edit-button:hover {
+    background: var(--claude-neural-subtle);
+    border-color: var(--claude-neural-border);
+    color: var(--claude-neural-glow);
+}
+
+/* ===================================================================
+   MESSAGE EDIT TEXTAREA & BUTTONS
+   =================================================================== */
+
+.claude-message-edit-textarea {
+    width: 100%;
+    min-height: 80px;
+    max-height: 200px;
+    padding: 12px;
+    background: var(--background-primary);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 8px;
+    color: var(--text-normal);
+    font-family: var(--font-ui-medium);
+    font-size: var(--font-ui-small);
+    line-height: 1.5;
+    resize: vertical;
+}
+
+.claude-message-edit-textarea:focus {
+    outline: none;
+    border-color: var(--claude-neural-base);
+    box-shadow: 0 0 0 3px var(--claude-neural-subtle);
+}
+
+.claude-message-edit-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.claude-message-edit-save,
+.claude-message-edit-cancel {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: var(--font-ui-smaller);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--claude-transition-fast) ease;
+}
+
+.claude-message-edit-save {
+    background: var(--claude-neural-base);
+    color: white;
+}
+
+.claude-message-edit-save:hover {
+    background: var(--claude-neural-glow);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.claude-message-edit-cancel {
+    background: var(--background-secondary);
+    color: var(--text-muted);
+    border: 1px solid var(--background-modifier-border);
+}
+
+.claude-message-edit-cancel:hover {
+    background: var(--background-modifier-hover);
+    color: var(--text-normal);
+}
+
+.claude-message-edit-save:active,
+.claude-message-edit-cancel:active {
+    transform: translateY(0) scale(0.97);
+}
+
+/* ===================================================================
+   ADDITIONAL ENHANCEMENTS - Polish and visual improvements
+   =================================================================== */
+
+/* Smooth message entry animation with stagger */
+.claude-chat-message {
+    animation: claude-message-slide-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+}
+
+@keyframes claude-message-slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Enhanced focus states */
+.claude-chat-input:focus {
+    box-shadow:
+        0 0 0 2px var(--claude-neural-subtle),
+        0 0 0 4px var(--claude-neural-base);
+}
+
+/* Better button press feedback */
+.claude-header-button:active {
+    transform: scale(0.95);
+}
+
+.claude-chat-send-button:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+/* Smooth scrollbar for messages */
+.claude-chat-messages {
+    scrollbar-width: thin;
+    scrollbar-color: var(--background-modifier-border) transparent;
+}
+
+/* Improved timestamp visibility */
+.claude-chat-message-timestamp {
+    opacity: 0.7;
+    transition: opacity var(--claude-transition-fast) ease;
+}
+
+.claude-chat-message-content:hover .claude-chat-message-timestamp {
+    opacity: 1;
+}
+
+/* Copy button animation feedback */
+.claude-message-copy-button.copied {
+    animation: claude-copy-success 0.4s ease;
+}
+
+@keyframes claude-copy-success {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+/* Typing cursor animation enhancement */
+.claude-typing-cursor {
+    animation: claude-cursor-blink 0.8s step-end infinite;
+}
+
+@keyframes claude-cursor-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* Enhanced scrollbar button animation */
+.claude-scroll-bottom-button {
+    animation: claude-scroll-pulse 2s ease-in-out infinite;
+}
+
+@keyframes claude-scroll-pulse {
+    0%, 100% {
+        box-shadow: 0 4px 16px rgba(139, 92, 246, 0.4);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(139, 92, 246, 0.6);
+    }
+}
+
+/* Improved code block hover effect */
+.claude-chat-message-text pre:hover {
+    border-color: var(--claude-neural-border);
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.15);
+}
+
+/* Link hover animation */
+.claude-chat-message-text a {
+    position: relative;
+    transition: color var(--claude-transition-fast) ease;
+}
+
+.claude-chat-message-text a::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--claude-neural-base);
+    transition: width var(--claude-transition-fast) ease;
+}
+
+.claude-chat-message-text a:hover::after {
+    width: 100%;
+}
+
+/* Loading skeleton for assistant messages */
+.claude-chat-message-assistant.loading .claude-chat-message-text {
+    position: relative;
+    overflow: hidden;
+}
+
+.claude-chat-message-assistant.loading .claude-chat-message-text::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--claude-neural-subtle),
+        transparent
+    );
+    animation: claude-skeleton-loading 1.5s infinite;
+}
+
+@keyframes claude-skeleton-loading {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* Message highlight on hover */
+.claude-chat-message-content {
+    transition:
+        box-shadow var(--claude-transition-fast) ease,
+        transform var(--claude-transition-fast) ease;
+}
+
+.claude-chat-message-user .claude-chat-message-content:hover {
+    transform: translateX(-2px);
+}
+
+.claude-chat-message-assistant .claude-chat-message-content:hover {
+    transform: translateX(2px);
+}
+
+/* ===================================================================
+   MAIN LAYOUT
+   =================================================================== */
+
+.claude-chat-main-layout {
+    display: flex;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Chat content area */
+.claude-chat-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
+}
+
+/* ===================================================================
+   SESSION TABS - Like Obsidian tabs
+   =================================================================== */
+
+.claude-session-tabs-wrapper {
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--background-modifier-border);
+    background: var(--background-secondary);
+}
+
+.claude-session-tabs-container {
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    height: 36px;
+    gap: 4px;
+}
+
+.claude-session-tabs-scroll {
+    flex: 1;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+}
+
+.claude-session-tabs-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.claude-session-tabs-list {
+    display: flex;
+    gap: 2px;
+}
+
+.claude-session-tabs-empty {
+    padding: 0 16px;
+    color: var(--text-muted);
+    font-size: var(--font-ui-smaller);
+    line-height: 36px;
+}
+
+/* Individual tab */
+.claude-session-tab {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.claude-session-tab-content {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 10px;
+    height: 28px;
+    margin-top: 8px;
+    background: var(--background-primary);
+    border: 1px solid var(--background-modifier-border);
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    min-width: 0;
+    max-width: 200px;
+}
+
+.claude-session-tab-content:hover {
+    background: var(--background-modifier-hover);
+}
+
+.claude-session-tab-active .claude-session-tab-content {
+    background: var(--background-primary);
+    border-color: var(--background-modifier-border-hover);
+    border-top: 2px solid var(--interactive-accent);
+    margin-top: 7px;
+}
+
+.claude-session-tab-name {
+    font-size: var(--font-ui-smaller);
+    font-weight: var(--font-medium);
+    color: var(--text-normal);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.claude-session-tab-active .claude-session-tab-name {
+    color: var(--interactive-accent);
+}
+
+/* Tab close button */
+.claude-session-tab-close {
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 3px;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    opacity: 0;
+    transition: all 0.15s ease;
+}
+
+.claude-session-tab-content:hover .claude-session-tab-close {
+    opacity: 0.6;
+}
+
+.claude-session-tab-close:hover {
+    opacity: 1 !important;
+    background: var(--background-modifier-hover);
+    color: var(--text-normal);
+}
+
+.claude-session-tab-close svg {
+    width: 10px;
+    height: 10px;
+}
+
+/* New session button (+) */
+.claude-session-tab-new {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    margin-top: 8px;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+}
+
+.claude-session-tab-new:hover {
+    background: var(--background-modifier-hover);
+    color: var(--text-normal);
+}
+
+.claude-session-tab-new svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* ===================================================================
+   ACTION BUTTONS - Below input area
+   =================================================================== */
+
+.claude-chat-input-actions {
+    display: flex;
+    gap: 8px;
+    padding: 8px 16px;
+    flex-shrink: 0;
+    justify-content: center;
+    border-top: 1px solid var(--background-modifier-border);
+    background: var(--background-secondary);
+}
+
+.claude-chat-action-button {
+    padding: 6px 12px;
+    font-size: var(--font-ui-smaller);
+    font-weight: var(--font-medium);
+    background: var(--background-modifier-form-field);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 4px;
+    color: var(--text-normal);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.claude-chat-action-button:hover {
+    background: var(--background-modifier-hover);
+    border-color: var(--background-modifier-border-hover);
+}
+
+.claude-chat-action-button:active {
+    transform: translateY(1px);
+}
